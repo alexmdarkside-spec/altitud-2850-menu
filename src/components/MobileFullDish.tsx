@@ -9,6 +9,10 @@ interface Dish {
   precio: number;
   descripcion: string;
   ingredientes: string[];
+  alergias: string[];
+  maridaje: string;
+  ocasion: string[];
+  estilo: string[];
   imagen: string;
 }
 
