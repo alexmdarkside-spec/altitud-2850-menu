@@ -1,0 +1,101 @@
+"use client";
+
+import React, { useState } from "react";
+
+interface Dish {
+  id: string;
+  nombre: string;
+  categoria: string;
+  precio: number;
+  descripcion: string;
+  ingredientes: string[];
+  alergias: string[];
+  maridaje: string;
+  ocasion: string[];
+  estilo: string[];
+  imagen: string;
+}
+
+interface MobileDishCardProps {
+  dish: Dish;
+  onSelect: (dish: Dish) => void;
+  onViewHistory: (dish: Dish) => void;
+}
+
+export default function MobileDishCard({ dish, onSelect, onViewHistory }: MobileDishCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div
+      className={`relative w-full max-w-sm mx-auto transition-all duration-500 ease-out ${
+        isExpanded ? "mb-8" : "mb-12"
+      }`}
+    >
+      {/* MAIN CARD CONTAINER */}
+      <div
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-neutral-800 hover:border-gold transition-all duration-300 cursor-pointer shadow-2xl"
+      >
+        {/* Image with Radial Glow Effect */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <img
+            src={dish.imagen}
+            alt={dish.nombre}
+            className={`w-full h-full object-cover transition-transform duration-700 ${isExpanded ? "scale-110" : "scale-100"}`}
+          />
+          {/* Radial Blend to merge with background #080808 */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_30%,#080808_100%)] opacity-70" />
+        </div>
+
+        {/* Bottom Info Overlay - High Legibility Gradient */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-[#080808]/80 to-transparent">
+          <div className="flex justify-between items-end">
+            <div className="max-w-[70%]">
+              <span className="text-[10px] text-gold font-bold uppercase tracking-wider block mb-1">{dish.categoria}</span>
+              <h3 className="font-syne font-bold text-2xl text-white leading-tight">{dish.nombre}</h3>
+            </div>
+            <span className="text-xl font-bold text-gold">${dish.precio}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* EXPANDABLE DETAILS SECTION */}
+      <div className={`overflow-hidden transition-all duration-500 ease-out ${
+        isExpanded ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0"
+      }`}>
+        <div className="bg-neutral-900/50 border border-neutral-800 rounded-2xl p-6 space-y-4 backdrop-blur-sm">
+          <div>
+            <h4 className="text-gold font-bold uppercase text-[10px] tracking-widest mb-2">Descripción Gastronómica</h4>
+            <p className="text-neutral-300 text-sm leading-relaxed">{dish.descripcion}</p>
+          </div>
+
+          <div>
+            <h4 className="text-gold font-bold uppercase text-[10px] tracking-widest mb-2">Ingredientes Principales</h4>
+            <div className="flex flex-wrap gap-2">
+              {dish.ingredientes.map((ing, i) => (
+                <span key={i} className="text-[10px] bg-neutral-800 text-neutral-300 px-2 py-1 rounded-md border border-neutral-700">
+                  {ing}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              onClick={(e) => { e.stopPropagation(); onViewHistory(dish); }}
+              className="flex-1 px-4 py-3 border border-gold text-gold text-xs font-bold rounded-full hover:bg-gold hover:text-black transition-all"
+            >
+              Ver Historia
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onSelect(dish); }}
+              className="flex-1 px-4 py-3 bg-gold text-black text-xs font-bold rounded-full hover:scale-105 transition-all"
+            >
+              Seleccionar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
